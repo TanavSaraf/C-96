@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import SignIn from "./screens/signIn";
 import Profile from "./screens/profile";
+import AddFriends from './screens/addFriend'
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 export default function App() {
   return <AppContainer />;
@@ -9,6 +10,7 @@ export default function App() {
 var switchNav = createSwitchNavigator({
   signIn: { screen: SignIn },
   profile: { screen: Profile },
+  addFriends:{screen:AddFriends},
 });
 var AppContainer = createAppContainer(switchNav);
 const styles = StyleSheet.create({
