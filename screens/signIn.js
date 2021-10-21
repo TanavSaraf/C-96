@@ -215,10 +215,12 @@ const styles = StyleSheet.create({
     width: 90,
     height: 30,
     backgroundColor: "red",
+    borderRadius:2,
     margin: 10,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
+    
   },
   textInput: {
     width: "80%",

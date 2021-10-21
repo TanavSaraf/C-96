@@ -114,7 +114,11 @@ export default class FeedRead extends React.Component {
             <Text>Save Changes</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>{this.props.navigation.navigate('addFriends')}} style={styles.fab}>
-            <Text>A</Text>
+            
+            <Image source={require('../assets/addFriends.PNG')}style={{height:20,width:20}}/>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>{this.props.navigation.navigate('friendList')}} style={styles.fab}>
+          <Image source={require('../assets/addFriends.PNG')} style={{height:20,width:20}}/>
           </TouchableOpacity>
         </View>
       );
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "bubblegum-sans",
     fontSize: 20,
-    color: "white",
+    color: "black",
     borderWidth: 2,
     borderRadius: 5,
     margin: 10,
@@ -185,6 +189,7 @@ const styles = StyleSheet.create({
     height: 30,
     backgroundColor: "red",
     margin: 10,
+    borderRadius:2,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
