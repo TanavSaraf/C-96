@@ -20,6 +20,9 @@ export default class AddFriend extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      firstName: "",
+      lastName: "",
+      docId: "",
       allUsers: [],
       email: firebase.auth().currentUser.email,
       searchValue: "",
@@ -28,7 +31,7 @@ export default class AddFriend extends React.Component {
   fetchUser = async () => {
     db.collection("user").onSnapshot((snapshot) => {
       var userSnapshot = snapshot.docs.map((doc) => doc.data());
-      console.log(userSnapshot);
+
       var temporary = [];
       userSnapshot.map((user) => {
         if (user.email == this.state.email) {
@@ -39,14 +42,46 @@ export default class AddFriend extends React.Component {
       this.setState({ allUsers: temporary });
     });
   };
+  fetchMyId = () => {
+    db.collection("user")
+      .where("email", "==", this.state.email)
+      .get()
+      .then((snapShot) => {
+        snapShot.forEach((docs) => {
+          var user = docs.data();
+          this.setState({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            docId: docs.id,
+          });
+        });
+      });
+  };
+  //requestee is the person sent to
+  //requestor is u
+  friendRequest = (requestee) => {
+    var requestor = this.state.docId;
+    var requestorName = this.state.firstName + "  " + this.state.lastName;
+    db.collection("friendRequests").add({
+      requestorId: requestor,
+      requestorName: requestorName,
+      requesteeId: requestee,
+    });
+  };
   renderItem = ({ item, index }) => {
     return (
       <View>
-        <TouchableOpacity style={styles.flatlistButton} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.flatlistButton}
+          onPress={() => {
+            this.friendRequest(item.docId);
+          }}
+        >
           <View style={styles.flatlistCont}>
             <Text style={styles.flatlistName}>{item.firstName}</Text>
             <Text style={styles.flatlistName}>{item.lastName}</Text>
           </View>
+          <Text>{}</Text>
           <Text>User Id:{item.docId}</Text>
         </TouchableOpacity>
       </View>
@@ -55,13 +90,13 @@ export default class AddFriend extends React.Component {
   componentDidMount() {
     //this.loadFontAsync();
     this.fetchUser();
+    this.fetchMyId();
   }
 
   render() {
-    console.log(this.state.allUsers);
     return (
-      <View>
-        <View style={{flexDirection:'row'}}>
+      <View style={{flex:1}}>
+        <View style={{ flexDirection: "row" }}>
           <TextInput
             placeholder="Search for people by the id"
             style={styles.textInput}
@@ -72,32 +107,56 @@ export default class AddFriend extends React.Component {
           <TouchableOpacity
             style={styles.buttons}
             onPress={() => {
-              db.collection(user)
+              db.collection("user")
                 .where("docId", "==", this.state.searchValue)
-                .get()
-                .then(({data})=>{var person=data
-                console.log(person)});
+                .onSnapshot((snapshot) => {
+                  var userSnapshot = snapshot.docs.map((doc) => doc.data());
+
+                  var temporary = [];
+                  userSnapshot.map((user) => {
+                    if (user.email == this.state.email) {
+                    } else {
+                      temporary.push(user);
+                    }
+                  });
+                  this.setState({ allUsers: temporary });
+                });
             }}
           >
             <Text>Search</Text>
           </TouchableOpacity>
         </View>
-        
-        <TouchableOpacity onPress={()=>{this.props.navigation.navigate('friendList')}} style={styles.fab}>
-          <Image source={require('../assets/addFriends.PNG')} style={{height:20,width:20}}/>
-          </TouchableOpacity>
-           <TouchableOpacity onPress={()=>{this.props.navigation.navigate('profile')}} style={styles.fab}>
-            <Image source={require('../assets/profile.PNG')} style={{height:20,width:20}}/>
-          </TouchableOpacity>
-          
         <FlatList
           data={this.state.allUsers}
-          keyExtractor={(index) => {
+          keyExtractor={(item, index) => {
             return index.toString();
           }}
           renderItem={this.renderItem}
         />
-       
+        <View style={{ flexDirection: "row", bottom: 20,justifyContent:'space-around',}}>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate("friendList");
+            }}
+            style={styles.fab}
+          >
+            <Image
+              source={require("../assets/friends.png")}
+              style={{ height: 20, width: 20 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate("profile");
+            }}
+            style={styles.fab}
+          >
+            <Image
+              source={require("../assets/profile.png")}
+              style={{ height: 20, width: 20 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -107,7 +166,6 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 2,
     borderWidth: 2,
-
     borderRadius: 20,
   },
   /*containerLT: {
@@ -135,10 +193,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    /*position:"absolute",
-    top:20,
-    right:50,
-    */
+
     backgroundColor: "grey",
     borderWidth: 1,
     alignItems: "center",

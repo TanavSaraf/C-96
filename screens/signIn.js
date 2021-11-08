@@ -122,6 +122,7 @@ export default class App extends React.Component {
                 lastName: this.state.lastName,
                 age: this.state.age,
                 email: this.state.email,
+                name:this.state.firstName+" "+this.state.lastName 
               });
               this.login();
             }
