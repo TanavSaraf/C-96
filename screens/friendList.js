@@ -39,6 +39,14 @@ export default class Friends extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
+              this.props.navigation.navigate("requests");
+            }}
+            style={{width:90,height:30,backgroundColor:'blue',borderRadius:3,borderWidth:2}}
+          >
+            <Text style={{textAlign:'center'}}>Request</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
               this.props.navigation.navigate("profile");
             }}
             style={styles.fab}
