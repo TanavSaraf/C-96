@@ -30,14 +30,18 @@ export default class Requests extends React.Component {
   }
   fetchUser = async () => {
     db.collection("friendRequests")
-      .where("requestorId", "==", this.state.docId)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          var array = [];
+      .where("requesteeId", "==", this.state.email)
+      .onSnapshot((snapshot) => {
+        snapshot.docs.map((doc) => {
           var user = doc.data();
-          array.push( requestoeeId= user.requesteeId );
-          this.setState({ allUsers:[this.state.allUsers, array] });
+
+          var temporary = [];
+          userSnapshot.map((user) => {
+            user["docId"] = doc.id;
+            temporary.push(user);
+          });
+          console.log(temporary);
+          this.setState({ allUsers: temporary });
         });
       });
   };
@@ -62,19 +66,31 @@ export default class Requests extends React.Component {
   renderItem = ({ item, index }) => {
     return (
       <View>
-        <TouchableOpacity
-          style={styles.flatlistButton}
-          onPress={() => {
-            this.friendRequest(item.docId);
-          }}
-        >
-          <View style={styles.flatlistCont}>
-            <Text style={styles.flatlistName}>{item.firstName}</Text>
-            <Text style={styles.flatlistName}>{item.lastName}</Text>
-          </View>
-          <Text>{}</Text>
-          <Text>User Id:{item.docId}</Text>
-        </TouchableOpacity>
+        <View style={styles.flatlistCont}>
+          <Text style={styles.flatlistName}>{item.requestorName}</Text>
+          <TouchableOpacity
+            style={styles.buttons}
+            onPress={() => {
+              db.collection("friendList").add({
+                requestorId: item.requestorId,
+                requesteeId: item.requesteeId,
+              });
+              db.collection("friendRequest").doc(item.docId).delete();
+            }}
+          >
+            <Text>ACCEPT</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttons}
+            onPress={() => {
+              db.collection("friendRequest").doc(item.docId).delete();
+            }}
+          >
+            <Text>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+        <Text>{}</Text>
+        <Text>User Id:{item.docId}</Text>
       </View>
     );
   };
@@ -85,7 +101,7 @@ export default class Requests extends React.Component {
   }
 
   render() {
-      console.log(this.state.allUsers)
+    console.log(this.state.allUsers);
     return (
       <View style={{ flex: 1 }}>
         <FlatList
@@ -95,36 +111,7 @@ export default class Requests extends React.Component {
           }}
           renderItem={this.renderItem}
         />
-        <View
-          style={{
-            flexDirection: "row",
-            bottom: 20,
-            justifyContent: "space-around",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate("friendList");
-            }}
-            style={styles.fab}
-          >
-            <Image
-              source={require("../assets/friends.png")}
-              style={{ height: 20, width: 20 }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate("profile");
-            }}
-            style={styles.fab}
-          >
-            <Image
-              source={require("../assets/profile.png")}
-              style={{ height: 20, width: 20 }}
-            />
-          </TouchableOpacity>
-        </View>
+       
       </View>
     );
   }

@@ -117,7 +117,7 @@ export default class App extends React.Component {
               );
             if (response) {
               Alert.alert("User Succesfully Added");
-              db.collection("user").add({
+              db.collection("user").doc(this.state.email).set({
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 age: this.state.age,

@@ -74,7 +74,7 @@ export default class AddFriend extends React.Component {
         <TouchableOpacity
           style={styles.flatlistButton}
           onPress={() => {
-            this.friendRequest(item.docId);
+            this.friendRequest(item.email);
           }}
         >
           <View style={styles.flatlistCont}>
@@ -82,7 +82,7 @@ export default class AddFriend extends React.Component {
             <Text style={styles.flatlistName}>{item.lastName}</Text>
           </View>
           <Text>{}</Text>
-          <Text>User Id:{item.docId}</Text>
+          <Text>User Id:{item.email}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -133,30 +133,7 @@ export default class AddFriend extends React.Component {
           }}
           renderItem={this.renderItem}
         />
-        <View style={{ flexDirection: "row", bottom: 20,justifyContent:'space-around',}}>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate("friendList");
-            }}
-            style={styles.fab}
-          >
-            <Image
-              source={require("../assets/friends.png")}
-              style={{ height: 20, width: 20 }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate("profile");
-            }}
-            style={styles.fab}
-          >
-            <Image
-              source={require("../assets/profile.png")}
-              style={{ height: 20, width: 20 }}
-            />
-          </TouchableOpacity>
-        </View>
+        
       </View>
     );
   }

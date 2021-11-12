@@ -113,36 +113,7 @@ export default class FeedRead extends React.Component {
           >
             <Text>Save Changes</Text>
           </TouchableOpacity>
-          <View
-          style={{
-            flexDirection: "row",
-            bottom: 20,
-            justifyContent: "space-around",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate("addFriends");
-            }}
-            style={styles.fab}
-          >
-            <Image
-              source={require("../assets/addFriends.png")}
-              style={{ height: 20, width: 20 }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate("friendList");
-            }}
-            style={styles.fab}
-          >
-            <Image
-              source={require("../assets/friends.png")}
-              style={{ height: 20, width: 20 }}
-            />
-          </TouchableOpacity>
-        </View>
+          
         </View>
       );
     } else {
